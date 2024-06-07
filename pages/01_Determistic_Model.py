@@ -36,9 +36,7 @@
 
 import numpy as np
 import streamlit as st
-import matplotlib.pyplot as plt
 import inputs
-import utils
 import roc
 
 st.title("Deterministic Model")
