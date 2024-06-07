@@ -1,35 +1,35 @@
-# Bleeding/Ischaemia Risk Trade-off Models
+# Risk Trade-off Models
 #
 # This is a script about different approaches to assessing
 # the potential changes in outcomes due to modifications in
-# therapy based on a bleeding/ischaemia risk trade-off tool,
+# therapy based on a risk trade-off tool,
 # under different probability models of the underlying outcomes.
 #
 # The purpose is to understand what effects could be expected,
-# and what side-effects may occur in the ischaemia outcomes as
-# a result of attempting to reduce bleeding risk.
-#
+# and what may occur in one outcome group as
+# a result of attempting to reduce an outcome in another group.
+# This can vary depending on prevelance of the outcomes along with the expected tests accuracy.
+# For example; an intervention to reduce one risk may in turn increase another. 
+
 # The underlying framework for these calculations is as follows:
 #
-# - Patients are divided into a group where the bleeding/ischaemia
+# - Patients are divided into a group where the 
 #   risk tool is used (A) and one where it is not (B).
-# - The overall goal is to reduce severe bleeding complications,
-#   under the hypothesis that ischaemia outcomes are already quite
-#   well managed. As a result, it is a success is the group A has
-#   less bleeding outcomes than group B, without there being an
-#   increase in ischaemia outcomes. (An alternative possibility
-#   would be to allow an increase in ischaemia outcomes, provided
-#   that it is less than the reduction in count of bleeding
-#   outcomes.)
-#
-# The following prevalences of outcomes following ACS/PCI will
-# be assumed (corresponding to group B):
-#
-# NI + NB: 92.2%
-# I + NB: 6.6%
-# NI + B: 1.0%
-# I + B: 0.2%
-#
+
+# - The overall goal is to reduce complications of an intervention,
+#   under the hypothesis that there is no scope for the intervention to be improved any further. 
+# 
+# There is a need to assume prevelances of normal outcomes for a population group without intervention (B).
+# z = outcome z
+# x = outcome x
+# nz = not outcome z
+# nx = not outcome x
+
+# nz + nx: 92.2%
+# z + nx: 6.6%
+# nz + x: 1.0%
+# z + x: 0.2%
+
 # Success of the intervention used in group A is defined by
 # a reduction in the rate of * + B outcomes, that comes with
 # no increase in total I + * outcomes.
@@ -45,35 +45,35 @@ st.write(
 )
 
 st.write(
-    "This page contains a simple theoretical model to estimate the effect of using a bleeding/ischaemia risk estimation tool selectively intervene in PCI patients to reduce their bleeding risk."
+    "This page contains a simple theoretical model (z vs x) to estimate the effect of using a trade off risk estimation tool selectively to reduce x."
 )
 st.write(
-    "In this model, patients are assumed to have predetermined outcomes, which occur deterministically in proportions which match the observed prevalence of bleeding and ischaemia outcomes (**Input 1**)."
+    "In this model, patients are assumed to have predetermined outcomes, which occur deterministically in proportions which match the observed prevalence of x and z outcomes (**Input 1**)."
 )
 st.write(
-    "In the model, a tool attempts to predict who will have adverse events, with a certain degree of success (**Input 2**). An intervention is applied to the patients determined to be at high bleeding risk."
+    "In the model, a tool attempts to predict who will have X, with a certain degree of success (**Input 2**). An intervention is applied to the patients determined to be at high risk of X."
 )
 st.write(
-    "The intervention is assumed to remove a bleeding event with a particular probability, and add an ischaemia event with a particular probability (**Input 3**)."
+    "The intervention is assumed to remove an X event with a particular probability, and add a Z event with a particular probability (**Input 3**)."
 )
 st.write(
     "Using the baseline prevalence, the accuracy of the model, and the efficacy of the intervention, the expected change in outcome proportions can be calculated, and compared to the baseline prevalences."
 )
 st.write(
-    "The usefulness of the tool depends on the absolute number of bleeding events removed and ischaemia events introduced."
+    "The usefulness of the tool depends on the absolute number of X events removed and Z events introduced."
 )
 #container is the box. And there is a variable of the box which then has header and write ect. interchanged from st.
 baseline_container = st.container(border=True)
 baseline_container.header("Input 1: Baseline Outcome Proportions", divider=True)
 baseline_container.write(
-    "Set the basline proportions of bleeding and ischaemia outcomes in PCI patients. This is the characteristics of a PCI population not having any intervention based on estimated bleeding/ischaemia risk."
+    "Set the basline proportions of X and Z outcomes in target population. This is the characteristics of a population not having any intervention attempting to change these."
 )
 
 # Get the user-input baseline prevalences (i.e. without performing interventions
 # based on a bleeding/ischaemia risk model outcome)
 defaults = {"ni_nb": 0.922, "ni_b": 0.01, "i_nb": 0.066}
 p_observed = inputs.prevalences(baseline_container, defaults)
-st.write(p_observed)
+
 
 # Get the variables for convenience (the first "b" in the variable
 # name means baseline, as opposed to "p_a_" (below) after the intervention
@@ -85,13 +85,13 @@ p_b_i_b = p_observed.loc["Ischaemia", "Bleed"]
 
 # Model 5: Full Deterministic Model
 #
-# In this model, predictions are made for whether the patient will have bleeding
-# or ischaemia events, which have probability of success q_b and q_i. Two
+# In this model, predictions are made for whether the patient will have X
+# or Z events, which have probability of success q_b and q_i. Two
 # possible intervention are made depending on the results of the prediction:
 #
-# NI/B: Intervention X, reduces bleeding risk by p_x and increase
-#     ischaemia risk by p_x. The rationale is that the patient is at low
-#     ischaemia risk, so a more aggressive intervention (such as lowering
+# NZ/B: Intervention Y, reduces X risk by p_x and increase
+#     Z risk by p_x. The rationale is that the patient is at low
+#     Z risk, so a more aggressive intervention (such as lowering
 #     DAPT) is possible to reduce bleeding risk
 # I/B: Intervention Y, reduces bleeding risk by p_y (where p_y < p_x), and
 #     does not modify ischaemia risk. This is a less aggressive intervention,
@@ -121,7 +121,7 @@ p_b_i_b = p_observed.loc["Ischaemia", "Bleed"]
 #
 
 st.write(
-    "A group of patients have their bleeding/ischaemia risk estimated by a tool (assumed to be a black box). In this model, the tool attempts to predict the bleeding/ischaemia outcomes a patient will have."
+    "A group of patients have their X/Z risk estimated by a tool (assumed to be a black box). In this model, the tool attempts to predict the X/Z outcomes a patient will have."
 )
 st.write(
     "The accuracy of the tool is characterised by the true positive and true negative rates, comparing the outcome prediction by the model to what outcome will actually occur."
@@ -142,19 +142,19 @@ q_i_tnr = accuracy["tnr_i"]
 roc.show_roc_expander(accuracy)
 
 st.write(
-    "When the tool predicts a bleed, one of two interventions are made. If no ischaemia is predicted, an aggressive intervention $X$ is made (e.g. a change in DAPT therapy), which has $X_b\%$ chance to remove a bleeding event, and $X_i\%$ chance to add an ischaemia event."
+    "When the tool predicts high risk of X, one of two interventions are made. If no Z is predicted, an aggressive intervention $T$ is made , which has $T_b\%$ chance to remove a X event, and $T_i\%$ chance to add an Z event."
 )
 st.write(
-    "If, however, ischaemia is also predicted, then a less aggressive intervention $Y$ is made (e.g. no modification of therapy, but advice to the clinicians and patients that bleeding risk is high. It has chance $Y_b\%$ to remove a bleeding event, and $Y_i\%$ chance to add an ischaemia event."
+    "If, however, Z is also predicted, then a less aggressive intervention $Y$ is made. It has chance $Y_b\%$ to remove a X event, and $Y_i\%$ chance to add an Z event."
 )
 
 intervention_container = st.container(border=True)
 intervention_container.header("Input 3: Intervention Effectiveness", divider=True)
 intervention_container.write(
-    "Set the probabilities for each intervention to reduce bleeding, and increase ischaemia."
+    "Set the probabilities for each intervention to reduce X, and increase Z."
 )
 intervention_container.write(
-    "In this model, an intervention can only reduce the chance of bleeding, and can only increase the chance of ischaemia."
+    "In this model, an intervention can only reduce the chance of X, and can only increase the chance of Z. This is the basic trade-off"
 )
 x_and_y_separate = intervention_container.toggle(
     "Y is different from X",

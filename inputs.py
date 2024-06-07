@@ -38,16 +38,16 @@ def prevalences(parent, defaults: dict[str, float]) -> DataFrame:
 
     # Get the user inputs
     ni_nb = simple_prob(
-        parent, "Proportion with no ischaemia and no bleeding (%)", 100*default_ni_nb
+        parent, "Proportion with no Z and no X (%)", 100*default_ni_nb
     )
     i_nb = simple_prob(
-        parent, "Proportion with ischaemia but no bleeding (%)", 100*default_i_nb
+        parent, "Proportion with Z but no X (%)", 100*default_i_nb
     )
     ni_b = simple_prob(
-        parent, "Proportion with bleeding but no ischaemia (%)", 100*default_ni_b
+        parent, "Proportion with X but no Z (%)", 100*default_ni_b
     )
     i_b = simple_prob(
-        parent, "Proportion with bleeding and ischaemia (%)", 100*default_i_b
+        parent, "Proportion with X and Z (%)", 100*default_i_b
     )
 
     # Check user-inputted probabilities sum to 1.0
@@ -139,9 +139,9 @@ def model_accuracy() -> dict[str, float]:
     if "q_i_tnr" not in st.session_state:
         st.session_state["q_i_tnr"] = 0.85
 
-    model_columns[0].subheader("Bleeding Model")
+    model_columns[0].subheader("Model")
     model_columns[0].write(
-        "Set the bleeding model's ability to identify high- and low-risk patients."
+        "Set the model's ability to identify high- and low-risk patients for X."
     )
 
     # Get true-positive/true-negative rates for the bleeding model from the user
@@ -151,7 +151,7 @@ def model_accuracy() -> dict[str, float]:
             "True-positive rate (%)",
             key="input_q_b_tpr",
             default_value=100 * st.session_state["q_b_tpr"],
-            help="The true-positive rates determine how well high-bleeding-risk patients are picked up. A high number will increase the chance of making targetted reductions in bleeding patients.",
+            help="The true-positive rates determine how well high-X-risk patients are picked up. A high number will increase the chance of making targetted reductions in X patients.",
         )
         st.session_state["q_b_tnr"] = simple_prob(
             model_columns[0],
@@ -166,19 +166,19 @@ def model_accuracy() -> dict[str, float]:
             "False-negative rate (%)",
             key="input_q_b_fnr",
             default_value=100 * (1 - st.session_state["q_b_tpr"]),
-            help="A low false-negative rate is the same as a high true-positive rate, which increases the chance of identifting high-bleedin-risk patients who require intervention.",
+            help="A low false-negative rate is the same as a high true-positive rate, which increases the chance of identifting high-X-risk patients who require intervention.",
         )
         st.session_state["q_b_tnr"] = 1 - simple_prob(
             model_columns[0],
             "False-positive rate (%)",
             key="input_q_b_fpr",
             default_value=100 * (1 - st.session_state["q_b_tnr"]),
-            help="A low false-positive rate prevents low-bleeding-risk patients being exposed to an intervention unnecessarily.",
+            help="A low false-positive rate prevents low-X-risk patients being exposed to an intervention unnecessarily.",
         )
 
-    model_columns[1].subheader("Ischaemia Model")
+    model_columns[1].subheader("Z Model")
     model_columns[1].write(
-        "Set the ischaemia model's ability to identify high- and low-risk patients."
+        "Set the Z model's ability to identify high- and low-risk patients."
     )
 
     # Get true-positive/true-negative rates for the bleeding model from the user
@@ -188,14 +188,14 @@ def model_accuracy() -> dict[str, float]:
             "True-positive rate (%)",
             key="input_q_i_tpr",
             default_value=100 * st.session_state["q_i_tpr"],
-            help="The true-positive rates determine how well high-ischaemia-risk patients are picked up. A high number will increase the chance of making targetted reductions in bleeding patients.",
+            help="The true-positive rates determine how well high-Z-risk patients are picked up. A high number will increase the chance of making targetted reductions in Z patients.",
         )
         st.session_state["q_i_tnr"] = simple_prob(
             model_columns[1],
             "True-negative rate (%)",
             key="input_q_i_tnr",
             default_value=100 * st.session_state["q_i_tnr"],
-            help="A high true-negative rate is the same as a low false-positive rate, which reduces low-ischaemia-risk patients being exposed to an intervention unnecessarily.",
+            help="A high true-negative rate is the same as a low false-positive rate, which reduces low-Z-risk patients being exposed to an intervention unnecessarily.",
         )
 
     else:
@@ -204,14 +204,14 @@ def model_accuracy() -> dict[str, float]:
             "False-negative rate (%)",
             key="input_q_i_fnr",
             default_value=100 * (1 - st.session_state["q_i_tpr"]),
-            help="A low false-negative rate is the same as a high true-positive rate, which increases the chance of identifting high-ischaemia-risk patients who require intervention.",
+            help="A low false-negative rate is the same as a high true-positive rate, which increases the chance of identifting high-Z-risk patients who require intervention.",
         )
         st.session_state["q_i_tnr"] = 1 - simple_prob(
             model_columns[1],
             "False-positive rate (%)",
             key="input_q_i_fpr",
             default_value=100 * (1 - st.session_state["q_i_tnr"]),
-            help="A low false-positive rate prevents low-ischaemia-risk patients being exposed to an intervention unnecessarily.",
+            help="A low false-positive rate prevents low-Z-risk patients being exposed to an intervention unnecessarily.",
         )
 
     # Expose the model accuracies as variables for convenience
