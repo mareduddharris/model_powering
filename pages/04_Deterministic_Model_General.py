@@ -60,7 +60,10 @@ st.write(
     "Using the baseline prevalence, the accuracy of the model, and the efficacy of the intervention, the expected change in outcome proportions can be calculated, and compared to the baseline prevalences."
 )
 st.write(
-    "The usefulness of the tool depends on the absolute number of X events removed and Z events introduced."
+    "Examples of these intervention trade offs include anticoagulation - bleeding (X) vs lowering thrombus risk (Z), immunosupressants - infection(X) vs organ rejection(Z). Surgery - success(X) vs complications(Z). Any model attempting to predict the risk to a patient of each category can be assessed for its strength in the following way"
+)
+st.write(
+    "The usefulness of the predictions tool depends on the absolute number of X events removed and Z events introduced."
 )
 #container is the box. And there is a variable of the box which then has header and write ect. interchanged from st.
 baseline_container = st.container(border=True)
@@ -153,13 +156,14 @@ intervention_container.header("Input 3: Intervention Effectiveness", divider=Tru
 intervention_container.write(
     "Set the probabilities for each intervention to reduce X, and increase Z."
 )
+
 intervention_container.write(
     "In this model, an intervention can only reduce the chance of X, and can only increase the chance of Z. This is the basic trade-off"
 )
 x_and_y_separate = intervention_container.toggle(
-    "Y is different from X",
+    "Multiple interventions possible for different identified groups",
     value=False,
-    help="By default, only one intervention $X$ is used on all high bleeding risk patients. Click here to allow use of a different intervention $Y$ for when a patient is flagged as high-ischaemia risk.",
+    help="By default, only one intervention $X$ is used on all high X risk patients. Click here to allow use of a different intervention $Y$ for when a patient is flagged as high-Z risk.",
 )
 
 # Set default intervention effectiveness
@@ -175,7 +179,7 @@ if "y_i" not in st.session_state:
 if not x_and_y_separate:
     st.session_state["x_b"] = (
         intervention_container.number_input(
-            "Probability that a bleeding event is removed (%)",
+            "Probability that a X event is removed (%)",
             key="input_xy_b",
             min_value=0.0,
             max_value=100.0,
@@ -187,7 +191,7 @@ if not x_and_y_separate:
     st.session_state["y_b"] = st.session_state["x_b"]
     st.session_state["x_i"] = (
         intervention_container.number_input(
-            "Probability that an ischaemia event is introduced (%)",
+            "Probability that an Z event is introduced (%)",
             key="input_xy_i",
             min_value=0.0,
             max_value=100.0,
@@ -203,7 +207,7 @@ else:
     intervention_columns[1].subheader("Intervention $Y$")
     st.session_state["x_b"] = (
         intervention_columns[0].number_input(
-            "Probability that a bleeding event is removed (%)",
+            "Probability that a X event is removed (%)",
             key="input_x_b",
             min_value=0.0,
             max_value=100.0,
@@ -214,7 +218,7 @@ else:
     )
     st.session_state["x_i"] = (
         intervention_columns[0].number_input(
-            "Probability that an ischaemia event is removed (%)",
+            "Probability that an Z event is removed (%)",
             key="input_x_i",
             min_value=0.0,
             max_value=100.0,
@@ -225,7 +229,7 @@ else:
     )
     st.session_state["y_b"] = (
         intervention_columns[1].number_input(
-            "Probability that a bleeding event is removed (%)",
+            "Probability that a X event is removed (%)",
             key="input_y_b",
             min_value=0.0,
             max_value=100.0,
@@ -236,7 +240,7 @@ else:
     )
     st.session_state["y_i"] = (
         intervention_columns[1].number_input(
-            "Probability that an ischaemia event is removed (%)",
+            "Probability that an Z event is removed (%)",
             key="input_y_i",
             min_value=0.0,
             max_value=100.0,
@@ -253,10 +257,10 @@ y_b = st.session_state["y_b"]
 y_i = st.session_state["y_i"]
 
 st.write(
-    "Based on the inputs above, there is a probability that a patient's outcomes will be correctly predicted, and a probability that an intervention to reduce bleeding will be successful (i.e. reduce bleeding and not increase ischaemia)."
+    "Based on the inputs above, there is a probability that a patient's outcomes will be correctly predicted, and a probability that an intervention to reduce X will be successful."
 )
 st.write(
-    "There will also be patients who would not have had any adverse event, but which are flagged as high bleeding risk and have an intervention which introduces ischaemia."
+    "There will also be patients who would not have had any adverse event, but which are flagged as high X risk and have an intervention which introduces Z."
 )
 st.write("The balance between these two competing effects is calculated below.")
 
@@ -338,18 +342,18 @@ output_container = st.container(border=True)
 output_container.header("Output: Outcome Proportions using Tool", divider=True)
 
 output_container.write(
-    "To make the outcome concretely interpretable in terms of numbers of patients, choose a number of patients $N$ who will undergo PCI and potentially receive a therapy intervention using the tool:"
+    "To make the outcome concretely interpretable in terms of numbers of patients, choose a number of patients $N$ who are in the target population who will use the prediction tool:"
 )
 
 n = output_container.number_input(
-    "Number of PCI patients treated using risk estimation tool",
+    "Number of patients using risk estimation tool for X vs Z",
     min_value=0,
     max_value=10000,
     value=5000,
 )
 
 output_container.write(
-    "In this theoretical model, bleeding and ischaemia events are considered equally severe, so success is measured by counting the number of bleeding events reduced and comparing it in absolute terms to the number of ischaemia events added."
+    "In this theoretical model, X and Z events are considered equally severe, so success is measured by counting the number of X events reduced and comparing it in absolute terms to the number of Z events added."
 )
 
 output_container.write(
@@ -374,8 +378,8 @@ total_increase = total_after - total_before
 
 # Show the summary of outcome changes
 col1, col2, col3 = output_container.columns(3)
-col1.metric("Bleeding", bleeding_after, bleeding_increase, delta_color="inverse")
-col2.metric("Ischaemia", ischaemia_after, ischaemia_increase, delta_color="inverse")
+col1.metric("X", bleeding_after, bleeding_increase, delta_color="inverse")
+col2.metric("Z", ischaemia_after, ischaemia_increase, delta_color="inverse")
 col3.metric(
     "Total Adverse Outcomes", total_after, total_increase, delta_color="inverse"
 )
