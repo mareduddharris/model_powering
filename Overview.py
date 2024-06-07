@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("Bleeding/Ischaemia Outcomes")
+st.title("Bleeding/Ischaemia Outcomes Changed Title 2")
 st.write("*Modelling effectiveness of DAPT changes based on bleeding/ischaemia-risk estimates.*")
 
 st.write("This application contains a collection of simple probability-based simulations design to place minimum performance criteria on models of bleeding and ischaemia risk in patients with acute coronary syndromes (ACS) being placed on a blood thinning medication like dual antiplatelet therapy (DAPT).")
