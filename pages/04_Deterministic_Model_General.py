@@ -60,8 +60,10 @@ st.write(
     "Using the baseline prevalence, the accuracy of the model, and the efficacy of the intervention, the expected change in outcome proportions can be calculated, and compared to the baseline prevalences."
 )
 st.write(
-    "Examples of these intervention trade offs include anticoagulation - bleeding (X) vs lowering thrombus risk (Z), immunosupressants - infection(X) vs organ rejection(Z). Surgery - success(X) vs complications(Z). Any model attempting to predict the risk to a patient of each category can be assessed for its strength in the following way"
+    "Examples of these intervention trade offs include anticoagulation n" 
 )
+st.write("* bleeding (X) vs lowering thrombus risk (Z) \n *  immunosupressants - infection(X) vs organ rejection(Z). \n * Surgery - risk of surgery(X) vs complications of disease(Z)")
+st.write("Any model attempting to predict the risk to a patient of each category can be assessed for its strength in the following way.")
 st.write(
     "The usefulness of the predictions tool depends on the absolute number of X events removed and Z events introduced."
 )
@@ -76,7 +78,6 @@ baseline_container.write(
 # based on a bleeding/ischaemia risk model outcome)
 defaults = {"ni_nb": 0.922, "ni_b": 0.01, "i_nb": 0.066}
 p_observed = inputs.prevalences(baseline_container, defaults)
-
 
 # Get the variables for convenience (the first "b" in the variable
 # name means baseline, as opposed to "p_a_" (below) after the intervention
@@ -383,3 +384,4 @@ col2.metric("Z", ischaemia_after, ischaemia_increase, delta_color="inverse")
 col3.metric(
     "Total Adverse Outcomes", total_after, total_increase, delta_color="inverse"
 )
+
