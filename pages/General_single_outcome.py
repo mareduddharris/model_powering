@@ -78,8 +78,8 @@ st.title("Your title here...")
 c = st.container(border=True)
 c.header("Baseline Prevalence", divider=True)
 c.write("TODO: get the baseline prevalence from the user")
-p_positive = st.number_input("Background Prevalence (%)", min_value=0, max_value=100)/100
-st.write("The assigned background prevelance (%) is ", p_positive*100)
+p_positive = c.number_input("Background Prevalence (%)", min_value=0, max_value=100, value=23)/100
+c.write(f"The assigned background prevelance (%) is {p_positive*100}")
 
 
 # STEP TWO -- MODEL PERFORMANCE
@@ -121,11 +121,11 @@ st.write("The assigned background prevelance (%) is ", p_positive*100)
 c = st.container(border=True)
 c.header("Model Performance", divider=True)
 
-tpr = st.number_input("True Positive Rate(%)", min_value=0, max_value=100)/100
-st.write(f"The assigned True Positive Rate is {tpr*100}(%)")
+tpr = c.number_input("True Positive Rate(%)", min_value=0, value=60, max_value=100)/100
+c.write(f"The assigned True Positive Rate is {tpr*100}(%)")
 
-tnr = st.number_input("True Negative Rate(%)", min_value=0, max_value=100)/100
-st.write(f"The assigned True Negative Rate is {tnr*100}(%)")
+tnr = c.number_input("True Negative Rate(%)", min_value=0, value=80, max_value=100)/100
+c.write(f"The assigned True Negative Rate is {tnr*100}(%)")
 
 # Get the other rates for convenience
 fpr = 1 - tnr
@@ -158,6 +158,9 @@ fnr = 1 - tpr
 #
 
 fig, ax = plt.subplots()
+ax.set_xlabel("False Positive Rate")
+ax.set_ylabel("True Positive Rate")
+ax.set_title("ROC")
 
 # Calculate the auc, which is just the area of the
 # triangle -- you can use utils.auc (look at utils.py)
@@ -168,6 +171,8 @@ auc = utils.simple_auc(tpr, tnr)
 x = [0.0,fpr, 1.0]
 y = [0.0, tpr, 1.0]
 ax.plot(x, y, label=f"The AUC is {auc:.2f}")
+
+
 ax.legend()
 
 c.pyplot(fig)
@@ -201,11 +206,11 @@ c = st.container(border=True)
 c.header("Effect of Action", divider=True)
 c.write("There are often actions taken based on a positive test result. In the correct (True Positive) cohort this can have a successful outome. However, in an incorrect (False Positive) cohort this could be harmful - eg. Reducing blood thinners.")
 
-p_success = st.number_input("In a true positive test result, what is the chance of an action being successful", min_value=0, max_value=100)/100
-st.write(f"The assigned Rate of successful action based on true positive test result is {p_success*100}(%)")
+p_success = c.number_input("In a true positive test result, what is the chance of an action being successful", min_value=0, max_value=100)/100
+c.write(f"The assigned Rate of successful action based on true positive test result is {p_success*100}(%)")
 
-p_harm = st.number_input("In a false positive test result, what is the chance of the same action causing harm. This could be zero depending on use case.", min_value=0, max_value=100)/100
-st.write(f"The assigned rate of harm through action taken based on a false positive test result is {p_harm*100}(%)")
+p_harm = c.number_input("In a false positive test result, what is the chance of the same action causing harm. This could be zero depending on use case.", min_value=0, max_value=100)/100
+c.write(f"The assigned rate of harm through action taken based on a false positive test result is {p_harm*100}(%)")
 
 # STEP 5 -- MATHS TIME
 #
@@ -303,13 +308,14 @@ data = {
 df = pd.DataFrame(data).set_index("Category")
 print(df)
 # Display the data in a table
-st.write("Data in Table:")
-st.write((100*df).style.format("{:.2f}%"))
+c.write("Data in Table:")
+c.write((100*df).style.format("{:.2f}%"))
 
 # Create a pie chart
 fig, ax = plt.subplots()
-ax.pie(df['Value'], labels=df.index, autopct='%1.1f%%', startangle=90)
+ax.pie(df['Value'], startangle=90)
 ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-st.write("Pie Chart:")
-st.pyplot(fig)
+ax.legend(labels=df.index)
+c.write("Pie Chart:")
+c.pyplot(fig)
 
