@@ -27,8 +27,8 @@ The app should include the following
 * Want to be able to have independant outcomes.
     * Eg Surgical intervention --> outcomes of not having surgery vs complications of surgery. 
 
-
-
+* Jobs
+    * For version 1 - write the code for this and try to delvier a ROC curve for this.
 
 
 ## Notes
