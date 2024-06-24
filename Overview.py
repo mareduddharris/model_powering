@@ -78,4 +78,4 @@ st.title("Your title here...")
 c = st.container(border=True)
 c.header("Models: Evaluating the model strength required with different prevelances of outcomes being predicted")
 c.write("Use this work through to ascertain the effects different model strengths (ROC) will have on being able to predict an outcome")
-c.write("Actions taken on a prediction can be positive or potentially negative in the incorrect patient group. This tool allows you to evaluate this impact based on outcome prevelance and model strength"
+c.write("Actions taken on a prediction can be positive or potentially negative in the incorrect patient group. This tool allows you to evaluate this impact based on outcome prevelance and model strength")
