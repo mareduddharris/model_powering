@@ -77,7 +77,7 @@ st.title("Understanding the impact of modeling")
 # user.
 c = st.container(border=True)
 c.header("Baseline Prevalence", divider=True)
-c.write("In this worked example we will evaluate the potential effectiveness of a prediction tool.")
+c.write("In this worked example we will evaluate the potential effectiveness of a prediction tool on a target population.")
 c.write("The first step is to consider: What is the background prevelance of the outcome you are trying to predict within the test population?")
 p_positive = c.number_input("Background Prevalence (%)", min_value=0, max_value=100, value=23)/100
 c.write(f"The assigned background prevelance (%) is {p_positive*100}")
@@ -327,9 +327,13 @@ c.pyplot(fig)
 c = st.container(border=True)
 c.header("Summary", divider=True)
 c.write("Though rudamentory this basic tool can highlight important model outcomes.")
-c.write("By exmaple, bleeding rates within post coronary intervention heart attack patients sits at 5%. A positive model prediction could result in a reduction in blood thinner regimen.")
-c.write("This could be benaficial by reducing the bleeding of this high risk patient group - maybe 1 in 10 patients benefit, 10%
-c.write("However, for patients who are False Positive predictions, reducing the blood thinners might increase their risk of a further heart attack - perhaps 1 in 20 suffer this, 5%"
-c.write("In this scenario assuming a ROC of 0.8, there is double harm compared to benefit.")
+c.write("By examaple, bleeding rates within post coronary intervention heart attack patients is at 5%. A model predicting a patient as high risk could result in a reduction in blood thinner regimen.")
+c.write("This prediction could be beneficial by reducing the bleeding of this high risk patient group - maybe 1 in 10 patients are saved a bleed, 10%")
+c.write("However, for patients who are False Positive predictions, reducing the blood thinners might increase their risk of a further heart attack - perhaps 1 in 20 suffer this, 5%")
+c.write("In this scenario assuming a ROC of 0.8, there is DOUBLE the harm to benefit.")
 
-c.write("Attempting to predict a low prevalance outcome can result in challenges. The majority of patients sit in the Negative camp, even with a low False Negative rate there is disproportionate representation because of the initial prevalences.")
+c.write("Attempting to predict a low prevalance outcome has challenges. The majority of test patients sit in the Negative camp, even with a high true negative rate there is disproportionate representation of false positive patients because the population split consists of so many negative patients to begin with.")
+
+c.write("Use this tool to understand how powerful your model needs to be in order to have the desired outcomes you envisage")
+
+c.write("Examples: Predicting stroke in AF patients, predicting Large Vessel Occlusion on CT head scans, predicting re-admission, predicting probability of a lesion being malignant")
